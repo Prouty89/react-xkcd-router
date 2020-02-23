@@ -1,29 +1,39 @@
-# React XKCD
+# React XKCD Router
 
 <img src="https://i.imgur.com/Wh8J9mX.gif" />
 
-Let's build a fun Single Page Application backed by a real API. We will recreate [xkcd.com](xkcd.com) using React and the [xkcd json api](https://xkcd.com/json.html).
+Let's extend our Single Page Application of an [xkcd clone](https://github.com/blevs/react-xckd) to use [React Router](https://reacttraining.com/react-router/web/guides/quick-start) to give the website routing between comics and other pages.
 
-To accomplish this, we will need to make some network requests with [axios](https://github.com/axios/axios), manage them with `useEffect` and `useState`, and learn what CORS is.
+You may use your code from that project, or the start code in this repo.
+
+React router is already added as a dependency to this project to get started, import `BrowserRouter` from `react-router-dom` and wrap the `App` component in it inside of `index.js`.
+
+```js
+...
+import { BrowserRouter as Router } from 'react-router-dom';
+// You don't need to rename BrowserRouter to Rotuer, but most people do out of convention
+...
+
+ReactDOM.render(<Router><App /></Router>, document.getElementById('root'));
+```
+
+For more information, you can follow the [Quick Start](https://reacttraining.com/react-router/web/guides/quick-start).
 
 ## Goals
 
 * [ ] Be respectful of the limits of the cors-anywhere and xkcd api.
-* [ ] Recreate the core functionality of [xckd.com](xkcd.com).
-  * [ ] See the most recent comic on page load.
-  * [ ] Go to next comic.
-  * [ ] Go to previous comic.
-  * [ ] Go to first comic.
-  * [ ] Go to most recent comic.
-  * [ ] Go to random comic.
-* [ ] Display the comic image, title, and alt text.
+* [ ] Add a navigation component to the website that will display the comic, about page, and blag. (The about page and blag can be placeholder content).
+* [ ] Refactor the `Comic` component to use a route parameter to render the appropriate comic number
+* [ ] Make the page buttons modify the url paramter to change the comic (Hint: [They can still be buttons](https://reacttraining.com/react-router/web/api/Hooks/usehistory))
+
+Note: Due to api limitations, making the random comic button work this way is actually a bit tricky, so that is considered a stretch goal.
 
 ## Stretch Goals
 
-* [ ] Use [react-router](https://reacttraining.com/react-router/web/guides/quick-start), or another routing solution, handle navigating to comics by id.
-* [ ] Setup [cors anywhere](https://github.com/Rob--W/cors-anywhere) locally.
-* [ ] Disable comic navigation buttons depending on context. (ex. It doesn't make sense to go to the next comic when you are at the lastest one).
-* [ ] Try initiating your requests directly with functions (ex. `fetchLastestComic()`) or via `useEffect` (ex. `useEffect(() => { axios(...) }, [comicNumber])`).
+* [ ] Use [NavLink](https://reacttraining.com/react-router/web/api/NavLink)'s to style the navigation links differently when on that page.
+* [ ] Make the random comic button work (Hint: What information do you need to get a random comic? How could you get that information when the button is pressed?)
+* [ ] Make use of the React Router [hooks](https://reacttraining.com/react-router/web/api/Hooks) in addition to, or instead of, the route props.
+* [ ] Do something interesting with the other pages (about and blag, for example).
 
 ## Notes
 

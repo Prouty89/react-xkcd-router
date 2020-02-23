@@ -1,6 +1,6 @@
 {
-  "short_name": "React XKCD - Henry Blevins",
-  "name":  "React XKCD - Henry Blevins",
+  "short_name": "React XKCD Router - Henry Blevins",
+  "name":  "React XKCD Router - Henry Blevins",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
