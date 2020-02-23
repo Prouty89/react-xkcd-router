@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useHistory, useLocation, useParams, Redirect } from 'react-router-dom';
 import './Comic.scss';
 import axios from 'axios';
 
 const Comic = (props) => {
+  const { comicNumber } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [comic, setComic] = useState(null);
@@ -32,11 +34,29 @@ const Comic = (props) => {
   };
 
   useEffect(() => {
-    fetchComic(1);
-  }, [/* deps array */]);
+    if (comicNumber === 'random') {
+      axios.get(`https://cors-anywhere.herokuapp.com/http://xkcd.com/info.0.json`)
+        .then(response => {
+          const num = response.data.num;
+          const randomNum = Math.floor(Math.random() * (num - 1)) + 1;
+          props.history.replace(`/${randomNum}`);
+        })
+        .catch(error => {
+          console.log('error', error);
+          setError(error);
+        });
+    } else if (comicNumber) {
+      fetchComic(props.match.params.comicNumber);
+    } else {
+      fetchLatestComic();
+    }
+  }, [comicNumber]);
 
   if (error) {
-    return <div>{error.message}</div>;
+    if (error.response && error.response.status === 404) {
+      return <Redirect to="/" />;
+    }
+    return <div>error</div>;
   }
 
   return (
@@ -44,8 +64,6 @@ const Comic = (props) => {
     <h1>{loading ? 'Loading...' : comic.title}</h1>
       <ComicButtons
         comic={comic}
-        fetchComic={fetchComic}
-        fetchLatestComic={fetchLatestComic}
         loading={loading}
       />
       {loading
@@ -58,53 +76,48 @@ const Comic = (props) => {
       }
       <ComicButtons
         comic={comic}
-        fetchComic={fetchComic}
-        fetchLatestComic={fetchLatestComic}
         loading={loading}
       />
     </div>
   );
 };
 
-
 const ComicButtons = ({
   comic,
-  fetchComic,
-  fetchLatestComic,
   loading,
 }) => {
+  const history = useHistory();
+  const location = useLocation();
+
   return (
     <div className="buttons">
       <button
         disabled={loading || comic.num === 1}
-        onClick={() => fetchComic(1)}
+        onClick={() => history.push('/1')}
       >
         first
       </button>
       <button
         disabled={loading || comic.num <= 1}
-        onClick={() => fetchComic(comic.num - 1)}
+        onClick={() => history.push(`/${comic.num - 1}`)}
       >
         previous
       </button>
-      {/* Stretch Goal */}
-      {/*
-         <button
-         disabled={loading}
-         onClick={() => null}
-         >
-         random
-         </button>
-       */}
       <button
         disabled={loading}
-        onClick={() => fetchComic(comic.num + 1)}
+        onClick={() => history.push(`/random`)}
+      >
+        random
+      </button>
+      <button
+        disabled={loading || location.pathname === '/'}
+        onClick={() => history.push(`${comic.num + 1}`)}
       >
         next
       </button>
       <button
-        disabled={loading}
-        onClick={() => fetchLatestComic()}
+        disabled={loading || location.pathname === '/'}
+        onClick={() => history.push('/')}
       >
         latest
       </button>
